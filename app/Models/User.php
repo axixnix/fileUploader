@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function verification(){
         return $this->hasMany(Verification::class);
     }
+
+    public function upload(){
+        return $this->hasMany(Upload::class);
+    }
 }
