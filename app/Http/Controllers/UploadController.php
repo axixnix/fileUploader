@@ -27,6 +27,7 @@ class UploadController extends Controller
 
             //$file=time().'__'.$request->file->getClientOriginalName();
             $file->file='/storage/'.$filePath;
+            $file->name= $name;
             $file->save();
 
             return Response(['message'=>'upload successful'],200);
