@@ -20,6 +20,7 @@ class UploadController extends Controller
         ]);
 
         if($validator){
+            $user = $request->input('user');
             $upload = new Upload;
             $file = $request->file('file');
             $destination_path ="public/files";
@@ -30,7 +31,8 @@ class UploadController extends Controller
 
             //$file=time().'__'.$request->file->getClientOriginalName();
             $upload->name=$name;
-    
+            $upload->user_id = $user;
+
             $upload->save();
 
             return Response(['message'=>'upload successful'],200);
