@@ -17,7 +17,7 @@ class LoginController extends Controller
         $user = User::where('email', $request->input('identifier'))
             ->orWhere('name', $request->input('identifier'))
             ->first();
-        if(is_null($user)) return response(['message'=>'user credentials do not match our records'],401);
+        if(is_null($user)) return response(['message'=>'user credentials do not kkkkk match our records'],401);
 
         if(Hash::check($request->input('password'), $user->password)){
             $token = Crypt::encryptString($user->id);

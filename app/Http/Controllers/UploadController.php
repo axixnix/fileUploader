@@ -20,15 +20,18 @@ class UploadController extends Controller
         ]);
 
         if($validator){
-            $file = new Upload;
+            $upload = new Upload;
+            $file = $request->file('file');
+            $destination_path ="public/files";
+            $file_name=$file->getClientOriginalName();
 
-            $name = time().'__'.$request->file->getClientOriginalName();
-            $filePath= $request->file('file')->storeAs('uploads',$name,'public');
+            $name = time().'__'.$file_name;
+            $filePath= $request->file('file')->storeAs($destination_path,$file_name);
 
             //$file=time().'__'.$request->file->getClientOriginalName();
-            $file->file='/storage/'.$filePath;
-            $file->name= $name;
-            $file->save();
+            $upload->name=$name;
+    
+            $upload->save();
 
             return Response(['message'=>'upload successful'],200);
         }else{
