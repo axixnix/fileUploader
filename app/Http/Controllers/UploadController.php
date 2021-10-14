@@ -20,7 +20,7 @@ class UploadController extends Controller
         ]);
 
         if($validator){
-            $user = $request->input('user');
+            $user = $request->input('user');//I am trying to get the user attribute that was added during authentication
             $upload = new Upload;
             $file = $request->file('file');
             $destination_path ="public/files";
@@ -31,6 +31,7 @@ class UploadController extends Controller
 
             //$file=time().'__'.$request->file->getClientOriginalName();
             $upload->name=$name;
+            var_dump($user);
             $upload->user_id = $user;
 
             $upload->save();
