@@ -25,6 +25,7 @@ class CustomAuth
                 $header= $request->header('Authorization');
                 $value = Crypt::decryptString($header);
                 $user = User::find($value);
+                //var_dump($user);
 
                 if($value && $user){
                     $request->attributes->add(['user'=>$user]);
