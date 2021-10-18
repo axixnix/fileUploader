@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Upload;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\Exists;
 use Symfony\Component\HttpFoundation\Response;
 
 use function GuzzleHttp\Promise\all;
@@ -58,8 +60,23 @@ class UploadController extends Controller
     }
 
     public function downloadFile(Request $request){
-        $fileName = $request->input('file_name');
-        return Storage::download($fileName);
+
+
+        $path = public_path('file.png');
+        return response()->download($path);
+      /*  if(Storage::disk('public')->exists("storage/files/$request->file")){
+            $path = Storage::disk('public')->path("storage/files/$request->file");
+            $content = file_get_contents($path);
+            return response($content)->withHeaders([
+                "content-type"=>mime_content_type($path)
+            ]);
+
+        }
+
+        return response(['message'=>'file not found in database'],404);*/
+
+       /* $fileName = $request->input('file_name');
+        return Storage::download($fileName);*/
     }
 
     public function deleteFiles(Request $request){

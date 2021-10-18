@@ -27,7 +27,7 @@ Route::prefix('files')->group(function(){
         //Route::post('/upload',[\App\Http\Controllers\UploadController::class,'UploadController@store']);
         Route::post('/upload',[\App\Http\Controllers\UploadController::class,'store']);
         Route::post('/delete{id}',[\App\Http\Controllers\UploadController::class,'deleteFiles']);
-        Route::post('/download{id}',[\App\Http\Controllers\UploadController::class,'downloadFile']);
+        Route::post('/download',[\App\Http\Controllers\UploadController::class,'downloadFile']);
         Route::get('/all',[\App\Http\Controllers\UploadController::class,'viewAllFiles']);
         Route::post('/search{id}',[\App\Http\Controllers\SearchController::class,'search']);
 
