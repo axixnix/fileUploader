@@ -10,8 +10,8 @@ class Upload extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'file'
+        'user_id',
+        'url'
 
     ];
 

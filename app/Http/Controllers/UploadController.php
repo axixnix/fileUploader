@@ -22,7 +22,26 @@ class UploadController extends Controller
         ]);
 
         if($validator){
-            $user_id = $request->user()->id;
+            $user = $request->user();
+            $request->file('file')->store('files2');
+            $path = $request->file('file')->store('files2');
+            $file=$request->file('file');
+            $file_name=$file->getClientOriginalName();
+            $upload = new Upload();
+            $upload->url = $path;
+            $upload->user_id = $user->id;
+            $upload->name = time().'__'.$file_name;
+            $upload->save();
+            /* this was working to upload, let's try something else
+            $user = $request->user();
+            $path = $request->file('file')->store('files','public');
+            $file=$request->file('file');
+            $file_name=$file->getClientOriginalName();
+            $upload = new Upload();
+            $upload->url = $path;
+            $upload->user_id = $user->id;
+            $upload->name = time().'__'.$file_name;
+            $upload->save();*/
             /*
             use Illuminate\Http\Request;
                 public function update(Request $request)
@@ -37,6 +56,8 @@ class UploadController extends Controller
                 auth()->user()->id ; // returns authenticated user id.
 
             */
+            /*
+            //code below worked
             $upload = new Upload;
             $file = $request->file('file');
             $destination_path ="public/files";
@@ -50,7 +71,7 @@ class UploadController extends Controller
             var_dump($user_id);
             $upload->user_id = $user_id;
 
-            $upload->save();
+            $upload->save();*/
 
             return Response(['message'=>'upload successful'],200);
         }else{
@@ -60,30 +81,43 @@ class UploadController extends Controller
     }
 
     public function downloadFile(Request $request){
-
-
-        $path = public_path('file.png');
-        return response()->download($path);
-      /*  if(Storage::disk('public')->exists("storage/files/$request->file")){
-            $path = Storage::disk('public')->path("storage/files/$request->file");
-            $content = file_get_contents($path);
-            return response($content)->withHeaders([
-                "content-type"=>mime_content_type($path)
-            ]);
-
-        }
-
-        return response(['message'=>'file not found in database'],404);*/
-
-       /* $fileName = $request->input('file_name');
-        return Storage::download($fileName);*/
+        $id=auth()->user()->id ;
+        
+        $file = Upload::where('name',$request->input('name'))->first();
+        $file_id =$file->user_id;
+        if($file &&($id==$file_id)){
+            $url = $file->url;
+            //dd($url);
+            //var_dump($url);
+           return Storage::download($url);//really need to lookup the asset helper
+    }return response(['message'=>'file not in records'],400);
+            
     }
 
     public function deleteFiles(Request $request){
-        Storage::delete('file.jpg');
+        $name=$request->input('name');
+        $file = Upload::where('name',$request->input('name'))->first();
+        $id=auth()->user()->id ;
+        $file_id =$file->user_id;
+        if($file && ($id==$file_id)){
+            $url = $file->url;
+        Storage::delete($url);
+        $file->delete();
+        return response(["message"=>"file  {$name} deleted" ],200);
+
+        }
+        return response(['message'=>'file not in records']);
+        
     }
 
     public function viewAllFiles(){
-        return Upload::all()->get('name');
+        $id=auth()->user()->id ;
+        //$result = Upload::all('name')->where('user_id','=',$id);//if I had left the parenthesis empty all fields would be displayed
+        $result = Upload::where('user_id','=',$id)->get('name');//if didn't specify name here it would return all fields that fit the query criteria
+        if($result==[[]]){
+            return response(['message'=>'no files in records']);
+
+        }
+        return response([$result],200);
     }
 }

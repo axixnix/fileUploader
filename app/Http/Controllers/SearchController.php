@@ -13,7 +13,7 @@ class SearchController extends Controller
         $result = Upload::where('name','LIKE','%'.$string.'%')->get();
 
          if($result){
-            return response(['result'=>$result]);
+            return response(['result'=>$result],200);
          }else{
              return response(['message'=>'no files match your search'],400);
          }
